@@ -1,0 +1,2 @@
+use the following command to compile: gcc ./mapTwo.c -o mapTwo -lncurses
+(-lncurses includes the necessary ncurses library)
