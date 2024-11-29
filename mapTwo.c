@@ -1,7 +1,7 @@
 /*
 Author: Chase Pitts
 Title: rogue-like with Ncurses
-Description: Started 2022 as a C programming review project 
+Description: Started in 2022 as a C programming review project 
 */
 #include <stdio.h>
 #include <math.h>
@@ -207,15 +207,19 @@ int main()
     switch(ch)
     {
     case KEY_LEFT:
+        if(*ptra[i][j-1]==3){*ptra[i][j-1]=0;} //kill if enemy in place
 	if((j!=0)&&(*ptra[i][j-1]==0)){j=j-1;}
 	break;
     case KEY_RIGHT:
+        if(*ptra[i][j+1]==3){*ptra[i][j+1]=0;} //kill if enemy in place
 	if((j<MAX-1)&&(*ptra[i][j+1]==0)){j=j+1;}
 	break;
     case KEY_UP:
+        if(*ptra[i-1][j]==3){*ptra[i-1][j]=0;} //kill if enemy in place
 	if((i!=0)&&(*ptra[i-1][j]==0)){i=i-1;}
 	break;
     case KEY_DOWN:
+        if(*ptra[i+1][j]==3){*ptra[i+1][j]=0;} //kill if enemy in place
 	if((i<MAX-1)&&(*ptra[i+1][j]==0)){i=i+1;}
 	break;
     case 'd':
@@ -261,7 +265,7 @@ int main()
     }
     //update map with location
     k = *ptra[i][j]; //store what will be under player in buffer 
-    *ptra[i][j] = 2; //replace ground with characer
+    *ptra[i][j] = 2; //replace ground with character
 
     printMapc(ptra); //print the map
     //mvprintw(1,0, "%d", i);
