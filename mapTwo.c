@@ -13,7 +13,7 @@ Description: Started in 2022 as a C programming review project
 #define HEIGHT 10
 #define CREATURES 20
 #define MAX 40
-
+#define MAX_RANGE 8 //max range of the crossbow
 
 
 void testTwo(int * array[MAX][MAX])
@@ -163,7 +163,7 @@ for ( i = 0; i < MAX; i++)
 
 int main()
 {
-   int i, j, k;
+   int i, j, k, range;
    int vara[MAX][MAX]; //going to implement int vara[MAX][MAX][CREATURES]; in order to store creature information
    int *ptra[MAX][MAX];
    //int creatures[MAX][MAX]; 
@@ -207,20 +207,24 @@ int main()
     switch(ch)
     {
     case KEY_LEFT:
-        if(*ptra[i][j-1]==3){*ptra[i][j-1]=0;} //kill if enemy in place
-	if((j!=0)&&(*ptra[i][j-1]==0)){j=j-1;}
+        if(j==0){break;}
+        if(*ptra[i][j-1]==3){*ptra[i][j-1]=0;break;} //kill if enemy in place
+	if(*ptra[i][j-1]==0){j=j-1;}
 	break;
     case KEY_RIGHT:
-        if(*ptra[i][j+1]==3){*ptra[i][j+1]=0;} //kill if enemy in place
-	if((j<MAX-1)&&(*ptra[i][j+1]==0)){j=j+1;}
+        if(j>=MAX-1){break;}
+        if(*ptra[i][j+1]==3){*ptra[i][j+1]=0;break;} //kill if enemy in place
+	if(*ptra[i][j+1]==0){j=j+1;}
 	break;
     case KEY_UP:
-        if(*ptra[i-1][j]==3){*ptra[i-1][j]=0;} //kill if enemy in place
-	if((i!=0)&&(*ptra[i-1][j]==0)){i=i-1;}
+        if(i==0){break;}
+        if(*ptra[i-1][j]==3){*ptra[i-1][j]=0;break;} //kill if enemy in place
+	if(*ptra[i-1][j]==0){i=i-1;}
 	break;
     case KEY_DOWN:
-        if(*ptra[i+1][j]==3){*ptra[i+1][j]=0;} //kill if enemy in place
-	if((i<MAX-1)&&(*ptra[i+1][j]==0)){i=i+1;}
+        if(i>=MAX-1){break;}
+        if(*ptra[i+1][j]==3){*ptra[i+1][j]=0;break;} //kill if enemy in place
+	if(*ptra[i+1][j]==0){i=i+1;}
 	break;
     case 'd':
 	//mine out in direction chosen via arrow keys
@@ -261,6 +265,47 @@ int main()
             if((i<MAX-1)&&(*ptra[i+1][j]==0)){*ptra[i+1][j]=1;}
             break;
         }
+        break;
+        
+        case 'f':
+	//fire crossbow
+        mvprintw(0, 1, "SELECT DIRECTION TO FIRE CROSSBOW");
+        ch=getch();
+        switch(ch)
+        {
+        case KEY_LEFT:
+
+            //delete enemy if found within MAX_RANGE, then break since bolt has hit something
+            for(range=0;range<MAX_RANGE;range++){
+              if(j-range==0){break;} //don't try to shoot outside of boundaries, prevent segmentation faults
+              if(*ptra[i][j-range]==3){*ptra[i][j-range]=0;break;} //delete enemy if detected, stop bolt
+              if(*ptra[i][j-range]==1){break;} //stop bolt if hits a wall
+            }
+            break;
+        case KEY_RIGHT:
+            for(range=0;range<MAX_RANGE;range++){
+              if(j+range>MAX-1){break;} //don't try to shoot outside of boundaries prevent segmentation faults
+              if(*ptra[i][j+range]==3){*ptra[i][j+range]=0;break;} //delete enemy if detected, stop bolt
+              if(*ptra[i][j+range]==1){break;} //stop bolt if hits a wall
+            }
+            break;
+        case KEY_UP:
+            for(range=0;range<MAX_RANGE;range++){
+              if(i-range<=0){break;} //don't try to shoot outside of boundaries prevent segmentation faults
+              if(*ptra[i-range][j]==3){*ptra[i-range][j]=0;break;} //delete enemy if detected, stop bolt
+              if(*ptra[i-range][j]==1){break;} //stop bolt if hits a wall
+            }
+            break;
+        case KEY_DOWN:
+            for(range=0;range<MAX_RANGE;range++){
+              if(i+range>=MAX-1){break;} //don't try to shoot outside of boundaries prevent segmentation faults
+              if(*ptra[i+range][j]==3){*ptra[i+range][j]=0;break;} //delete enemy if detected, stop bolt
+              if(*ptra[i+range][j]==1){break;} //stop bolt if hits a wall
+            }
+            break;
+        }
+        break;
+        
 
     }
     //update map with location
